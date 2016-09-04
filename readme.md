@@ -5,3 +5,5 @@
 ### 2016-09-05
 Finish basic data cleaning
 Try to make a benchmark using kNN
+
+convert all training data in one file
