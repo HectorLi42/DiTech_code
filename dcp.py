@@ -238,7 +238,7 @@ def clean_and_save(datapath, id_map, date_string):
     if not os.path.isdir(new_path):
         os.makedirs(new_path)
 
-        data_train_fixed.to_csv(new_path + '\\data_train.csv',index = False)
+        data_train_fixed.to_csv(new_path + '//data_train.csv',index = False)
         return data_train_fixed
 
 
