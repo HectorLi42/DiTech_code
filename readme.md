@@ -16,4 +16,6 @@ convert all training data in one file
 
 The final MAE result on Training set is 1.538
 
+To run `didi_knn_on_training_set.ipynb`, you only need to unzip TrainingData.zip
+
 「以上」
