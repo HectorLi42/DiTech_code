@@ -179,7 +179,7 @@ def clean_and_save(datapath, id_map, date_string):
 
     ### sort weather_data by time
     ### remove repeated weather information
-    ### fill missing values with weather data in previous data point
+    ### fill missing values with weather data with previous data point
     weather_data['Time'] = weather_data['Time'].apply(time2slice)
     weather_data = weather_data.sort_values(by = ['Time'])
     #weather_data = weather_data[1::2]
@@ -238,7 +238,7 @@ def clean_and_save(datapath, id_map, date_string):
     if not os.path.isdir(new_path):
         os.makedirs(new_path)
 
-        data_train_fixed.to_csv(new_path + '//data_train.csv',index = False)
+        data_train_fixed.to_csv(new_path + '\\data_train.csv',index = False)
         return data_train_fixed
 
 
