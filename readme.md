@@ -19,3 +19,18 @@ The final MAE result on Training set is 1.538
 To run `didi_knn_on_training_set.ipynb`, you only need to unzip TrainingData.zip
 
 「以上」
+
+### 2016-09-06
+
+knn - benchmark on test-set-1 has been uploaded to UdaGroup
+
+final MAE score = 9.6
+
+#### what to do tomorrow ####
+* rewrite dcp.py into a better looking form
+* add `weekdays/weekend`, `price` as new features
+* implement feature selection
+* Try better regression algorithms
+* Find a way to include POI as features 
+
+「以上」
