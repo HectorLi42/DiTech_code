@@ -34,3 +34,9 @@ final MAE score = 9.6
 * Find a way to include POI as features 
 
 「以上」
+
+### 2016-09-07
+
+* rewrite dcp.py,the new version is dcpv2.py
+* add weekdays as new features range from 1 to 7
+* drop weather data when using knn
