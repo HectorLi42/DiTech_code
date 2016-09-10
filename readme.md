@@ -34,3 +34,11 @@ final MAE score = 9.6
 * Find a way to include POI as features 
 
 「以上」
+
+### 2016-09-11
+
+add `weekdays/weekend`, `price` as new features
+implement feature selection
+
+date cleaning takes some time
+check `ridge regression`, `GradientBoostTree`, and better `knn` tomorrow
