@@ -26,7 +26,6 @@ def datelist(start,end):
     while curr_date != end_date:
         result.append("%04d-%02d-%02d" % (curr_date.year, curr_date.month, curr_date.day))
         curr_date += datetime.timedelta(1)
-<<<<<<< HEAD
     return result
 
 def hash2id(district_hash,id_map):
@@ -42,24 +41,6 @@ def hash2id(district_hash,id_map):
         if input hash is incorrect,    
         return 'invalidhash'    
     '''
-=======
-        result.append("%04d-%02d-%02d" % (curr_date.year, curr_date.month, curr_date.day))
-    return result
-
-def hash2id(district_hash,id_map):
-	'''
-	convert district_hash to district_id
-	id_map should be a DataFrame, where the first column
-	is hash, the second column is corresponding id.
-	Recomended column name of id_map is 
-	['district_hash','district_id']
-	Return:
-	    if input hash is valid,
-	    return district_id (integer)
-	    if input hash is incorrect,
-	    return 'invalidhash'
-	'''
->>>>>>> origin/master
     location = (id_map.iloc[:,0] == district_hash)
     if sum(location):
         return int(id_map[location].iloc[0,1])
@@ -67,12 +48,8 @@ def hash2id(district_hash,id_map):
         return 'invalidhash'
 
 def time2slot(time_sample):
-<<<<<<< HEAD
     '''
     Calculate which time_slot a specific time record belongs to.
-=======
-    '''Calculate which time_slot a specific time record belongs to.
->>>>>>> origin/master
     Args:
         time_sample: a string, takes the format '2010-01-21 19:03:43'
     Returns:
@@ -104,17 +81,10 @@ def get_week_day(date):
     return week_day
 
 def num2str(num):
-<<<<<<< HEAD
     ''' convert a num, float is OK to a string,
      for exmaple, 1.0 to '1'
      It is used before apply One-Hot-Encoding to Weather type
      '''
-=======
-	''' convert a num, float is OK to a string,
-	 for exmaple, 1.0 to '1'
-	 It is used before apply One-Hot-Encoding to Weather type
-	 '''
->>>>>>> origin/master
     return str(int(num))
 
 def OneHotEncoding(X):
@@ -164,7 +134,6 @@ def add_nearby_gaps2features(data_tmp):
 
     return data_tmp
 
-<<<<<<< HEAD
 def add_nearby_prices2features(data_tmp):
     '''
     add previous 3 pricess as new features,then remove present prices
@@ -207,8 +176,6 @@ def add_nearby_counts2features(data_tmp):
 
     return data_tmp
 
-=======
->>>>>>> origin/master
 def level2num(rawlevel):
     ''' turn tj_level into integers '''
     if str(rawlevel) != 'nan':
@@ -223,7 +190,6 @@ def level2num(rawlevel):
 
 
 def load_data(datapath,filename,datatype):
-<<<<<<< HEAD
     '''
     load data table as a DataFrame.
     Args:
@@ -277,61 +243,16 @@ def process_order_data(order_data,date_string,id_map):
     '''
     clean and apply feature transformation on order_data
     '''
-=======
-	'''
-	load data table as a DataFrame.
-	Args:
-	    datapath, path to load a data file
-	    filename, exact filename ,order data should be
-	    like 'order_data_2015_02_21'
-	    datatype, a string,takes value from
-	    ['cluster','order','weather','traffic']
-	Return:
-	   DataFrame with correct column names
-	'''
-
-	dataset_path = os.path.join(path, filename)
-	if datatype == 'cluster':
-		col_name = ['district_hash','district_id']
-
-	if datatype == 'order':
-		col_name = ['order_id','driver_id','passenger_id',\
-    'start_district_hash','dest_district_hash','Price','Time']
-
-    if datatype = 'weather':
-    	col_name = ['Time','Weather','temperature','PM2.5']
-
-    if datatype = 'traffic':
-    	col_name = ['district_hash','tj_level_1','tj_level_2','tj_level_3','tj_level_4','tj_time']
-
-    ### load data
-    data = pd.read_table(dataset_path,header = None, names = feature_name)
-    print datatype+' data set read successfully!'
-    print len(data)
-
-    return data
-
-def process_order_data(order_data,date_string,id_map):
-	'''
-	clean and apply feature transformation on order_data
-	'''
->>>>>>> origin/master
 
     ### generate a standard time series, from 1 to 144, for later use
     time_standard = pd.DataFrame(data = np.arange(144)+1,columns = ['time'])
     ###
-<<<<<<< HEAD
     district_number = 66
     order_data['no_response'] = order_data['driver_id'].isnull()
-=======
-
-	order_data['no_response'] = order_data['driver_id'].isnull()
->>>>>>> origin/master
 
     #order_data_refined = order_data.copy()
     order_data_refined = order_data
     #order_data_refined = order_data_refined[:500]
-<<<<<<< HEAD
     useless_col = ['passenger_id','dest_district_hash']
     order_data_refined.drop(useless_col, axis = 1,inplace = True)
 
@@ -406,56 +327,13 @@ def processing_traffic_data(traffic_data,id_map):
     '''
     '''
     level_list = ['tj_level_1','tj_level_2','tj_level_3','tj_level_4']
-=======
-    useless_col = ['order_id','driver_id','dest_district_hash','Price']
-    order_data_refined.drop(useless_col,axis = 1,inplace = True)
-
-    order_data_refined['start_district_hash'] = \
-    order_data_refined['start_district_hash'].apply(hash2id,id_map = id_map)
-    order_data_refined['Time'] = order_data_refined['Time'].apply(time2slice)
-
-    gaps = order_data_refined['no_response'].groupby(
-        [order_data_refined['start_district_hash'], order_data_refined['Time']]).sum()
-    #gaps = order_data_refined.groupby(['start_district_hash','Time']).sum()
-    ### dataframe 'gaps' is exactly what to predict in the problem
-    gaps = gaps.reset_index()
-    gaps = gaps.sort_values(by = ['start_district_hash', 'Time'])   ###sort gaps by time and district_id
-    gaps.columns = ['district_id','time','gaps']
-    gaps['weekday'] = get_week_day(date_string)  ###add a column indicate weekdays,take value from 1 to 7
-
-    ### Warning, the above process has a drawback ####
-    ### If in a paticular time slice there is no passenger request, this time slice won't appear in above dataframe
-    ### But according to problem statement, such a data point should be marked as 'gaps = 0'
-    ### Fix this problem before further analysis
-
-    gaps_filled = pd.DataFrame(columns = gaps.columns)
-
-    for iid in np.arange(district_number)+1:
-        gaps_tmp = gaps[gaps['district_id'] == iid]
-        gaps_tmp_fixed = pd.merge(time_standard,gaps_tmp,how = 'outer', on = ['time']) ### add missing time-slice
-        gaps_tmp_fixed = gaps_tmp_fixed.fillna({'district_id':iid,'gaps':0,'weekday':get_week_day(date_string)})
-        gaps_filled = pd.concat([gaps_filled, gaps_tmp_fixed], ignore_index=True)
-
-    return gaps_filled
-
-def processing_traffic_data(order_data,id_map):
-	'''
-	'''
-	level_list = ['tj_level_1','tj_level_2','tj_level_3','tj_level_4']
->>>>>>> origin/master
     for level in level_list:
         traffic_data[level] = traffic_data[level].apply(level2num)
 
     traffic_data['district_hash'] = traffic_data['district_hash'].apply(hash2id,id_map = id_map)
-<<<<<<< HEAD
     traffic_data['tj_time'] = traffic_data['tj_time'].apply(time2slot)
     traffic_data = traffic_data.fillna(method ='pad')
     traffic_data = traffic_data.fillna(method = 'bfill')
-=======
-    traffic_data['tj_time'] = traffic_data['tj_time'].apply(time2slice)
-    traffic_data = traffic_data.fillna(method =' pad')
-    traffic_data = traffic_data_fillna(method = 'bfill')
->>>>>>> origin/master
 
     ## change column names into ['district_id','tj_level_1','tj_level_2',
     ##'tj_level_3','tj_level_4','time'])
@@ -464,7 +342,6 @@ def processing_traffic_data(order_data,id_map):
 
     return traffic_data
 
-<<<<<<< HEAD
 def processcing_weather_data(weather_data):
     '''
     '''
@@ -475,15 +352,6 @@ def processcing_weather_data(weather_data):
     time_standard = pd.DataFrame(data = np.arange(144)+1,columns = ['time'])
 
     weather_data['Time'] = weather_data['Time'].apply(time2slot)
-=======
-def processcing_weather_data(weather_data,id_map):
-	'''
-	'''
-	### sort weather_data by time
-    ### remove repeated weather information
-    ### fill missing values with weather data with previous data point
-    weather_data['Time'] = weather_data['Time'].apply(time2slice)
->>>>>>> origin/master
     weather_data = weather_data.sort_values(by = ['Time'])
     weather_data = weather_data.drop_duplicates(['Time'])
 
@@ -502,16 +370,12 @@ def processcing_weather_data(weather_data,id_map):
     weather_data_filled['Weather'] = weather_data_filled['Weather'].apply(num2str)
     weather_data_filled = OneHotEncoding(weather_data_filled)
 
-<<<<<<< HEAD
     return weather_data_filled
 
-=======
->>>>>>> origin/master
 def clean_and_save(datapath, id_map, date_string,save_or_not = True):
     '''This is main function of this script
     load in original data for each day, do data cleaning
     then merge these three tables into a DataFrame named data_train
-<<<<<<< HEAD
     comment added 2016-09-10:
     Relative to previous version, add average prices, total counts as new features
     '''
@@ -519,20 +383,11 @@ def clean_and_save(datapath, id_map, date_string,save_or_not = True):
     order_folder_location = os.path.join(datapath, 'order_data')
     file_name = 'order_data_'+ date_string
     order_data = load_data(order_folder_location,file_name,'order')
-=======
-    '''
-
-    ### step1, load order_data and clean
-    order_folder_location = os.path.join(datapath, 'order_data')
-    file_name = 'order_data_'+ date_string
-    order_data = load_data(order_folder_location,filename,'order')
->>>>>>> origin/master
     gaps_final = process_order_data(order_data,date_string,id_map)
 
     ### step2, load traffic_data and clean
     traffic_data_location = os.path.join(datapath, 'traffic_data')
     file_name = 'traffic_data_' + date_string
-<<<<<<< HEAD
     traffic_data = load_data(traffic_data_location,file_name,'traffic')
     traffic_final = processing_traffic_data(traffic_data,id_map)
 
@@ -544,24 +399,10 @@ def clean_and_save(datapath, id_map, date_string,save_or_not = True):
 
     ### step4, merge and save(?)
     data_train = pd.merge(gaps_final, traffic_final, how = 'left', on=['district_id', 'time'])
-=======
-    traffic_data = load_data(traffic_data_location,filename,'traffic')
-    traffic_final = processing_traffic_data(traffic_data,date_string,id_map)
-
-    ### step3, load weather_data and clean
-    weather_data_location = os.path.join(datapath, 'weather_data')
-    filename = 'weather_data' + date_string
-    weather_data = load_data(weather_data_location,filename,'weather')
-    weather_final = processcing_weather_data(weather_data,date_string)
-
-    ### step4, merge and save(?)
-    data_train = pd.merge(gaps_final, traffic_final, how='left', on=['district_id', 'time'])
->>>>>>> origin/master
     data_train = pd.merge(data_train,weather_final,how = 'outer', on=['time'])
     data_train = data_train.sort_values(by = ['district_id','time'])
 
     ### fill missing traffic level values in each district, 
-<<<<<<< HEAD
     ### then add previous 3 gaps,prices,counts as new features.
     district_number = 66
     data_train_fixed = pd.DataFrame(columns = data_train.columns)
@@ -574,16 +415,6 @@ def clean_and_save(datapath, id_map, date_string,save_or_not = True):
         data_tmp = add_nearby_prices2features(data_tmp)
         data_tmp = add_nearby_counts2features(data_tmp)
         data_tmp.drop(['prices','counts'],axis = 1,inplace = True)
-=======
-    ### then add previous 3 gaps as new features.
-    district_number = 66
-    data_train_fixed = pd.DataFrame(columns = data_train.columns)
-    for iid in np.arange(district_number)+1:
-        data_tmp = data_train[data_train['district_id'] == iid]
-        data_tmp = data_tmp.reset_index(drop = True)
-        ### add 3 previous gaps to each points
-        data_tmp = add_nearby_gaps2features(data_tmp)
->>>>>>> origin/master
         ### fillna in traffic level
         data_tmp = data_tmp.fillna(method = 'bfill')
         data_tmp = data_tmp.fillna(method = 'pad')
@@ -608,11 +439,7 @@ def clean_and_save(datapath, id_map, date_string,save_or_not = True):
 
     return data_train_fixed
 
-<<<<<<< HEAD
 def train_run():
-=======
-def run():
->>>>>>> origin/master
     date_list = datelist((2016, 1, 1), (2016, 1, 21))  ### generate time list of training data
     pwd = os.getcwd()
     data_set_type = '//training_data'
@@ -635,7 +462,6 @@ def run():
     print 'haha lege ha, data cleaning finished'
     return None
 
-<<<<<<< HEAD
 def concat_train_data():
     '''
     concat all training data
@@ -740,7 +566,5 @@ def run_test():
 
 
 
-=======
->>>>>>> origin/master
 
 

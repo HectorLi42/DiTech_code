@@ -35,18 +35,12 @@ final MAE score = 9.6
 
 「以上」
 
-<<<<<<< HEAD
 ### 2016-09-11
 
 add `weekdays/weekend`, `price` as new features
 implement feature selection
 
-date cleaning takes some time
+data cleaning takes some time
 check `ridge regression`, `GradientBoostTree`, and better `knn` tomorrow
 =======
-### 2016-09-07
 
-* rewrite dcp.py,the new version is dcpv2.py
-* add weekdays as new features range from 1 to 7
-* drop weather data when using knn
->>>>>>> origin/master
