@@ -468,7 +468,7 @@ def concat_train_data():
     add 'Weather_6' = 0 for training all data
     drop rows where gaps = 0
     '''
-    date_list = datelist((2016, 1, 1), (2016, 1, 21))
+    date_list = datelist((2016, 1, 1), (2016, 1, 22))
     pwd = os.getcwd()
     data_set_type = '//training_data'
     
@@ -515,6 +515,8 @@ def run_test():
     data_set_type = 'test_set_1'
     filepath = os.path.join(pwd, data_set_type)
 
+    date_time_dict = {}
+
     with open(filepath + '//read_me_1.txt','rb') as f:
         content = f.readlines()
         for line in content:
@@ -534,10 +536,12 @@ def run_test():
     file_name = '//cluster_map'
     col_name = ['district_hash','district_id']
 
+    id_map = pd.read_table(cluster_folder_location + file_name,names = col_name)
+
     ### Step 1 pickup rows to predict, concat test set into a dataframe
     data_test_all = pd.DataFrame()
     for date_string,timelist in date_time_dict.items():
-        data_test_tmp = dcp.clean_and_save(filepath, id_map, date_string,save_or_not = False)
+        data_test_tmp = clean_and_save(filepath, id_map, date_string,save_or_not = False)
         data_test_tmp['date'] = date_string
     
         data_test_tmp_select = data_test_tmp[data_test_tmp['time'].apply(inlist,llist = timelist)]

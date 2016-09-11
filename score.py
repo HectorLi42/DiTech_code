@@ -21,8 +21,26 @@ def output_required_format(data):
     output = output.reset_index(drop = True)
     return output
 
-def measure_performance():
-    my_result = pd.read_csv('test_pred_1.csv')
+def measure_performance_mae(result_file = 'test_pred_1.csv'):
+    my_result = pd.read_csv(result_file)
+    my_result.columns = ['depart', 'time', 'gap_pred']
+    # load golden result
+    golden_result = pd.read_table("test_result_1", sep=',', names=['depart', 'time', 'gap_real'])
+
+    result = pd.merge(my_result, golden_result, on=['depart', 'time'], how='right')
+    #result.fillna(0, inplace = True)
+    result['gap'] = (result['gap_real'] - result['gap_pred']).abs()
+    result['gap'] = result['gap'].astype(float)
+    result = result[['depart', 'time', 'gap']]
+
+    mae = result.groupby('depart').mean().mean()
+
+    print mae
+
+    return mae
+
+def measure_performance_mape(result_file = 'test_pred_1.csv'):
+    my_result = pd.read_csv(result_file)
     my_result.columns = ['depart', 'time', 'gap_pred']
     # load golden result
     golden_result = pd.read_table("test_result_1", sep=',', names=['depart', 'time', 'gap_real'])
@@ -33,8 +51,8 @@ def measure_performance():
     result['gap'] = result['gap'].astype(float)/result['gap_real']
     result = result[['depart', 'time', 'gap']]
 
-    mae = result.groupby('depart').mean().mean()
+    mape = result.groupby('depart').mean().mean()
 
-    print mae
+    print mape
 
-    return mae
+    return mape

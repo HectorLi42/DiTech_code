@@ -44,3 +44,13 @@ data cleaning takes some time
 check `ridge regression`, `GradientBoostTree`, and better `knn` tomorrow
 =======
 
+### 2016-09-12
+
+most useful features are three previous gaps, and two previous counts
+
+mae decrease to 5.3
+
+Finished data cleaning process, result has been uploaded to Udacity slack
+
+「以上」
+
